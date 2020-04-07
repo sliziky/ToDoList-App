@@ -7,12 +7,7 @@ import SubmissionBox from "./Components/SubmissionBox";
 import Tasks from "./Components/Tasks";
 import TodoRepository from './Api/todoRepository';
 
-export interface ITask {
-  id : number;
-  task : string;
-  done : boolean;
-  timeStamp : Date;
-}
+import ITask from "./Model/ITask";
 
 const App = () => {
 

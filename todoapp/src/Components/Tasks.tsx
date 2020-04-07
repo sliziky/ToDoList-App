@@ -5,7 +5,7 @@ import {
   ListGroupItem,
 } from "reactstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {ITask} from "../App";
+import ITask from "../Model/ITask";
 
 interface ITasksProp {
     tasks : ITask[];

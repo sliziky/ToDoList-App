@@ -1,5 +1,5 @@
 import axios from "axios";
-import {ITask} from "../App";
+import ITask from "../Model/ITask";
 
 class TodoRepository {
     getAll = async () : Promise<ITask[]> => {
