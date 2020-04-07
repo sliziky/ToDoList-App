@@ -16,14 +16,15 @@ const App = () => {
   const addTask = (task : string) => {
     if (task === "") return;
     var newTask : ITask = {id : getMaxId(tasks) + 1, task: task, timeStamp: new Date(), done : false};
+    var data = JSON.stringify({
+      id : newTask.id,
+      task : newTask.task,
+      done : newTask.done,
+      timeStamp: newTask.timeStamp
+    });
     axios.post(
       'https://localhost:44310/api/todolist',
-      { 
-        id : newTask.id, 
-        task : newTask.task, 
-        done: newTask.done, 
-        timeStamp:newTask.timeStamp
-      },
+      data,
       { headers: { 'Content-Type': 'application/json' } }).then(response => { 
         console.log(response)
       })

@@ -7,12 +7,14 @@ import {
 import "bootstrap/dist/css/bootstrap.min.css";
 import ITask from "../Model/ITask";
 
-interface ITasksProp {
+interface ITasksProps {
     tasks : ITask[];
     removeTask : (task : ITask) => void;
 }
 
-const Tasks = (props : ITasksProp) => {
+
+
+const Tasks = (props : ITasksProps) => {
   return (
     <>
       <ListGroup>
