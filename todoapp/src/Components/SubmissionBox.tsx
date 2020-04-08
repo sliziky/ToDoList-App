@@ -5,25 +5,26 @@ import ITask from "../Model/ITask";
 
 interface ISubmissionProps {
     tasks : ITask[];
-    addTask : (task : string) => void;
-    
+    addTask : (task : string) => void;  
 }
 
 const SubmissionBox = (props : ISubmissionProps) => {
-    const [task, setTask] = useState("");
+    const [task, setTask] = useState<string>("");
+
     const onTaskChange = (e : any) : void => {
         setTask(e.target.value);
     }
-    const onClick = (task : string) => {
+
+    const onClick = (task : string) : void => {
         props.addTask(task);
         setTask("");
     } 
     return (
         <>
-        <InputGroup>
-            <Input placeholder="Add new task..." value={task} onChange={onTaskChange}/>
-            <Button color="success" type="button" onClick={() => onClick(task)}>Submit</Button>
-        </InputGroup>
+            <InputGroup>
+                <Input placeholder="Add new task..." value={task} onChange={onTaskChange}/>
+                <Button color="success" type="button" onClick={() => onClick(task)}>Submit</Button>
+            </InputGroup>
         </>
     );
 }
