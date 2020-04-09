@@ -24,7 +24,7 @@ const DropDownMenu = (props : IDropDownProps) => {
         <DropdownMenu>
 
         {choices.map((item: string, i: any) => (
-          <DropdownItem onClick={() => onChoiceClick(item)}>{item}</DropdownItem>
+          <DropdownItem key={i} onClick={() => onChoiceClick(item)}>{item}</DropdownItem>
         ))}
         </DropdownMenu>
       </ButtonDropdown>

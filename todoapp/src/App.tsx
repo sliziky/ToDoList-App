@@ -2,53 +2,34 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import { Container, Col } from "reactstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import axios from "axios";
 import SubmissionBox from "./Components/SubmissionBox";
 import Tasks from "./Components/Tasks";
 import TodoRepository from "./Api/todoRepository";
 import DropDownMenu from "./Components/DropDownMenu";
 import ITask from "./Model/ITask";
-import { API_URL } from "./Api/constants";
+import ApiHandler from "./Api/ApiHandler";
+import Helper from "./Helpers";
 
 const App = () => {
-
+  const apiHandler = new ApiHandler();
   const [tasks, setTasks] = useState<ITask[]>([]);
 
   const [filter, setFilter] = useState<string>("All");
 
-  const setNewFilter = (newFilter : string) : void => {
-    setFilter(newFilter);
-  }
+  const setNewFilter = (newFilter : string) : void => { setFilter(newFilter); }
+
   const addTask = (task: string) : void => {
     if (task === "") return;
 
     let newTask: ITask = {
-      id: getMaxId(tasks) + 1,
+      id: Helper.getMaxId(tasks) + 1,
       task: task,
       timeStamp: new Date().toJSON(),
       done: false,
     };
-
-    sendTaskToApi(newTask);
+    
+    apiHandler.postTaskAPI(newTask);
     setTasks([...tasks, newTask]);
-  };
-
-  const sendTaskToApi = (task : ITask) : void => {
-    let data = JSON.stringify({
-      id : task.id,
-      task : task.task,
-      done : task.done,
-      timeStamp : task.timeStamp
-    });
-    postDataToApi(data);
-  }
-
-  const getMaxId = (tasks: ITask[]): number => {
-    if (tasks.length === 0) return -1; // first index will be 0
-    return Math.max.apply(
-      Math,
-      tasks.map((x) => x.id)
-    );
   };
 
   const onTaskDoneClick = (task : ITask) : void => {
@@ -56,28 +37,14 @@ const App = () => {
     let taskIndex : number = cloned.map(x => x.id).indexOf(task.id);
     cloned[taskIndex].done = !cloned[taskIndex].done;
     setTasks(cloned);
-    sendTaskToApi(cloned[taskIndex]);
+    apiHandler.postTaskAPI(cloned[taskIndex]);
   }
 
   const removeTask = (task: ITask) : void => {
     setTasks(tasks.filter((item) => item.id !== task.id));
-    axios.delete(API_URL + "/" + task.id, {
-      data: { id: task.id },
-    });
+    apiHandler.deleteTaskAPI(task);
   };
 
-  const postDataToApi = (data : string) : void => {
-    axios
-    .post(API_URL, data, {
-      headers: { "Content-Type": "application/json" },
-    })
-    .then((response) => {
-      console.log(response);
-    })
-    .catch((error) => {
-      console.log(error.response);
-    });
-  }
 
   const getActiveTasks = () : ITask[] => {
     return tasks.filter(x => !x.done);
@@ -113,7 +80,7 @@ const App = () => {
         <Col sm="5" md={{ size: 8, offset: 3 }}>
           <SubmissionBox tasks={tasks} addTask={addTask} />
           <DropDownMenu filter={filter} setFilter={setNewFilter}/>
-          <Tasks tasks={filteredTasks()} filter={filter} removeTask={removeTask} onTaskDoneClick={onTaskDoneClick} />
+          <Tasks tasks={filteredTasks()} removeTask={removeTask} onTaskDoneClick={onTaskDoneClick} />
         </Col>
       </Container>
     </div>

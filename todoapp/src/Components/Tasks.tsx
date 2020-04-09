@@ -11,7 +11,6 @@ interface ITasksProps {
     tasks : ITask[];
     removeTask : (task : ITask) => void;
     onTaskDoneClick : (task : ITask) => void;
-    filter : string;
 }
 
 const Tasks = (props : ITasksProps) => {
