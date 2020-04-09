@@ -6,7 +6,7 @@ import axios from "axios";
 import SubmissionBox from "./Components/SubmissionBox";
 import Tasks from "./Components/Tasks";
 import TodoRepository from "./Api/todoRepository";
-
+import DropDownMenu from "./Components/DropDownMenu";
 import ITask from "./Model/ITask";
 import { API_URL } from "./Api/constants";
 
@@ -14,13 +14,18 @@ const App = () => {
 
   const [tasks, setTasks] = useState<ITask[]>([]);
 
+  const [filter, setFilter] = useState<string>("All");
+
+  const setNewFilter = (newFilter : string) : void => {
+    setFilter(newFilter);
+  }
   const addTask = (task: string) : void => {
     if (task === "") return;
 
     let newTask: ITask = {
       id: getMaxId(tasks) + 1,
       task: task,
-      timeStamp: new Date(),
+      timeStamp: new Date().toJSON(),
       done: false,
     };
 
@@ -74,6 +79,25 @@ const App = () => {
     });
   }
 
+  const getActiveTasks = () : ITask[] => {
+    return tasks.filter(x => !x.done);
+  }
+
+  const getCompletedTasks = () : ITask[] => {
+    return tasks.filter(x => x.done);
+  }
+
+  const filteredTasks = () : ITask[] => {
+    if (filter === "Active") {
+      return getActiveTasks();
+    }
+    if (filter === "Completed") {
+      return getCompletedTasks();
+    }
+    return tasks;
+  }
+
+
   useEffect(() => {
     const fetchData = async () => {
       const repo = new TodoRepository();
@@ -88,7 +112,8 @@ const App = () => {
       <Container>
         <Col sm="5" md={{ size: 8, offset: 3 }}>
           <SubmissionBox tasks={tasks} addTask={addTask} />
-          <Tasks tasks={tasks} removeTask={removeTask} onTaskDoneClick={onTaskDoneClick} />
+          <DropDownMenu filter={filter} setFilter={setNewFilter}/>
+          <Tasks tasks={filteredTasks()} filter={filter} removeTask={removeTask} onTaskDoneClick={onTaskDoneClick} />
         </Col>
       </Container>
     </div>

@@ -10,5 +10,5 @@ export default interface ITask {
     done : boolean;
     
     // When was Task created
-    timeStamp : Date;
+    timeStamp : string;
   }
